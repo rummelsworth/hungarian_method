@@ -21,6 +21,7 @@
  * implementation found in brute_force_assignment.c for solving the assignment
  * problem.
  */
+#include <cstdlib>
 #include <cstdio>
 #include <cstring>
 #include <ctime>

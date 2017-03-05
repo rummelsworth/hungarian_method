@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="brute_force_assignment.c">
+    <ClCompile Include="brute_force_assignment.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hm_test.c">
+    <ClCompile Include="hm_test.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hungarian_method.c">
+    <ClCompile Include="hungarian_method.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

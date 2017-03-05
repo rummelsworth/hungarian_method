@@ -99,9 +99,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="brute_force_assignment.c" />
-    <ClCompile Include="hm_test.c" />
-    <ClCompile Include="hungarian_method.c" />
+    <ClCompile Include="brute_force_assignment.cc" />
+    <ClCompile Include="hm_test.cc" />
+    <ClCompile Include="hungarian_method.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="brute_force_assignment.h" />

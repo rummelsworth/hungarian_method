@@ -68,7 +68,7 @@ perm_lex_successor( int n, int *pi )
         {
           atexit( rho_free );
         }
-      p = realloc( rho, ( m = n ) * sizeof( *p ) );
+      p = (int *)realloc( rho, ( m = n ) * sizeof( *p ) );
       if ( !p )
         {
           return NULL;
@@ -134,8 +134,8 @@ brute_force_assignment( int *mate, int *c, int n )
    */
   int best_cost, current_cost;
   int *best_perm, *current_perm;
-  if ( !( best_perm = malloc( n * sizeof( *best_perm ) ) )
-       || !( current_perm = malloc( n * sizeof( *current_perm ) ) ) )
+  if ( !( best_perm = (int *)malloc( n * sizeof( *best_perm ) ) )
+       || !( current_perm = (int *)malloc( n * sizeof( *current_perm ) ) ) )
     return NULL;
   /*
    * Initialize the current permutation data structure with the

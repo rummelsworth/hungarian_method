@@ -173,15 +173,15 @@ hm_data_internal_allocate( hm_data *hm, int n )
   hm->count = NULL;
   hm->exposed = NULL;
   hm->label = NULL;
-  if ( ( hm->q.data = malloc( n * sizeof( *hm->q.data ) ) )
-       && ( hm->a.data = malloc( n * n * sizeof( *hm->a.data ) ) )
-       && ( hm->alpha = malloc( n * sizeof( *hm->alpha ) ) )
-       && ( hm->beta = malloc( n * sizeof( *hm->beta ) ) )
-       && ( hm->slack = malloc( n * sizeof( *hm->slack ) ) )
-       && ( hm->nhbor = malloc( n * sizeof( *hm->nhbor ) ) )
-       && ( hm->count = malloc( n * sizeof( *hm->count ) ) )
-       && ( hm->exposed = malloc( n * sizeof( *hm->exposed ) ) )
-       && ( hm->label = malloc( n * sizeof( *hm->label ) ) ) )
+  if ( ( hm->q.data = (int *)malloc( n * sizeof( *hm->q.data ) ) )
+       && ( hm->a.data = (arc *)malloc( n * n * sizeof( *hm->a.data ) ) )
+       && ( hm->alpha = (int *)malloc( n * sizeof( *hm->alpha ) ) )
+       && ( hm->beta = (int *)malloc( n * sizeof( *hm->beta ) ) )
+       && ( hm->slack = (int *)malloc( n * sizeof( *hm->slack ) ) )
+       && ( hm->nhbor = (int *)malloc( n * sizeof( *hm->nhbor ) ) )
+       && ( hm->count = (int *)malloc( n * sizeof( *hm->count ) ) )
+       && ( hm->exposed = (int *)malloc( n * sizeof( *hm->exposed ) ) )
+       && ( hm->label = (int *)malloc( n * sizeof( *hm->label ) ) ) )
     {
       hm->n = n;
       return hm;
