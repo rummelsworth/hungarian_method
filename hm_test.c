@@ -21,9 +21,9 @@
  * implementation found in brute_force_assignment.c for solving the assignment
  * problem.
  */
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
 
 #include "brute_force_assignment.h"
 #include "hungarian_method.h"

@@ -16,8 +16,8 @@
  */
 
 #include "brute_force_assignment.h"
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #include <limits.h>
 
 /*

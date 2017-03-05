@@ -24,13 +24,13 @@
  * November 2010.
  */
 #include "hungarian_method.h"
-#include <stdlib.h>
+#include <cstdlib>
 #include <limits.h>
 
 /*
  * Solely for the tracing function hm_print() defined below.
  */
-#include <stdio.h>
+#include <cstdio>
 
 /*
  * This implementation uses zero-based indexing with V={0,...,n-1} and
