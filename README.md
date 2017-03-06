@@ -6,15 +6,15 @@
 ## Summary
 
 This implementation of the Hungarian method is derived almost entirely from
-Chapter 11 of _Combinatorial Optimization: Algorithms and Complexity_ by
-Christos Papadimitriou and Kenneth Steiglitz. Specifically, the code within
+Chapter 11 of [_Combinatorial Optimization: Algorithms and Complexity_][spubs]
+by Christos Papadimitriou and Kenneth Steiglitz. Specifically, the code within
 `hungarian_method.cc` should be able to be read with an approximately one-to-one
 correspondence to the pseudo-code presented in Figure 11-2. This package also
-contains an implementation of a brute-force solution to the _assignment
-problem_, the problem that the Hungarian method solves so much more efficiently.
-The brute-force implementation is included for the sake of comparison and
-testing. Finally, there is a very basic testing program contained in
-`hm_test.cc`.
+contains an implementation of a brute-force solution to the [_assignment
+problem_][assignment], the problem that the Hungarian method solves so much more
+efficiently. The brute-force implementation is included for the sake of
+comparison and testing. Finally, there is a very basic testing program contained
+in `hm_test.cc`.
 
 This implementation was _not_ designed as a reusable library, with qualities
 like API user-friendliness and performance in mind. The purpose of development
@@ -41,4 +41,6 @@ at Prof. Steiglitz's Princeton homepage as of 21 November 2010. For
 details-in-context on the errata, please view the comments embedded within the
 implementation file `hungarian_method.cc`.
 
+[spubs]: http://www.cs.princeton.edu/~ken/PUBS.html
+[assignment]: https://en.wikipedia.org/wiki/Assignment_problem
 [latest]: http://www.cs.princeton.edu/~ken/latest.pdf
