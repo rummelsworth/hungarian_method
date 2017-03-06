@@ -19,7 +19,7 @@ in `hm_test.cc`.
 This implementation was _not_ designed as a reusable library, with qualities
 like API user-friendliness and performance in mind. The purpose of development
 was didactic, to produce as close a correct analog as possible of the Figure
-11-2 pseudocode.
+11-2 pseudo-code.
 
 The source was originally written in ANSI C to be compiled with a plain `gcc`
 command line, but has since been updated (with very few changes) to compile as a
