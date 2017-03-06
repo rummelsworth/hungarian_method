@@ -1,6 +1,7 @@
 # The Hungarian method: an implementation in C/C++
 
-> 21 November 2010; 5 March 2017
+- 5 March 2017
+- 21 November 2010
 
 ## Summary
 
@@ -15,9 +16,14 @@ The brute-force implementation is included for the sake of comparison and
 testing. Finally, there is a very basic testing program contained in
 `hm_test.cc`.
 
-> The source was originally written in ANSI C to be compiled with a plain `gcc`
-> command line, but has since been updated (with very few changes) to compile as
-> a Visual C++ project in Visual Studio 2017.
+This implementation was _not_ designed as a reusable library, with qualities
+like API user-friendliness and performance in mind. The purpose of development
+was didactic, to produce as close a correct analog as possible of the Figure
+11-2 pseudocode.
+
+The source was originally written in ANSI C to be compiled with a plain `gcc`
+command line, but has since been updated (with very few changes) to compile as a
+Visual C++ project in Visual Studio 2017.
 
 ## Motivation
 
@@ -29,7 +35,7 @@ source package is to document these errata with an appropriately annotated,
 working implementation.
 
 To offer somewhat more concise documentation of the errata, this package also
-includes a supplementary errata file (`supplement.pdf`) whose format is
+includes a [supplementary errata file](supplement.pdf) whose format is
 essentially the same as that of the [8 October 2000 errata file][latest] located
 at Prof. Steiglitz's Princeton homepage as of 21 November 2010. For
 details-in-context on the errata, please view the comments embedded within the
