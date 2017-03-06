@@ -18,6 +18,6 @@
 #ifndef HUNGARIAN_METHOD_H
 #define HUNGARIAN_METHOD_H
 
-int *hungarian_method( int *, int *, int );
+int *hungarian_method(int *, int *, int);
 
 #endif

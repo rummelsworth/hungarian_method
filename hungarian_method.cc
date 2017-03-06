@@ -38,64 +38,58 @@
  * value precludes zero-based indexing. Thus, we use a negative int as a
  * "blank" value.
  */
-enum { blank = -1 };
+enum
+{
+    blank = -1
+};
 
 /*
- * Convenient macros to reduce clutter, improve readability, and facilitate
- * translation of vertex labels to zero-based indices where needed.
+ * Convenience macros to reduce clutter, improve readability, and facilitate
+ * translation of vertex labels to zero-based indices where needed. Primarily
+ * assists with writing as closely as possible to the text's pseudocode.
  */
-#define Q              ( hm->q )
-#define A              ( hm->a )
-#define N              ( hm->n )
-#define V( i_ )        ( ( i_ ) )
-#define U( j_ )        ( ( j_ ) - N )
-#define MATE( i_ )     ( hm->mate[ V( i_ ) ] )
-#define C( i_, j_ )    ( hm->c[ V( i_ ) * N + U( j_ ) ] )
-#define ALPHA( i_ )    ( hm->alpha[ V( i_ ) ] )
-#define BETA( j_ )     ( hm->beta[ U( j_ ) ] )
-#define SLACK( j_ )    ( hm->slack[ U( j_ ) ] )
-#define NHBOR( j_ )    ( hm->nhbor[ U( j_ ) ] )
-#define COUNT( i_ )    ( hm->count[ V( i_ ) ] )
-#define EXPOSED( i_ )  ( hm->exposed[ V( i_ ) ] )
-#define LABEL( i_ )    ( hm->label[ V( i_ ) ] )
-#define EACH_V( i_ )   ( i_ = 0; i_ < N; ++i_ )
-#define EACH_U( j_ )   ( j_ = N; j_ < 2 * N; ++j_ )
+#define Q           (hm->q)
+#define A           (hm->a)
+#define N           (hm->n)
+#define V(i_)       (i_)
+#define U(j_)       ((j_) - N)
+#define MATE(i_)    (hm->mate[V(i_)])
+#define C(i_, j_)   (hm->c[V(i_) * N + U(j_)])
+#define ALPHA(i_)   (hm->alpha[V(i_)])
+#define BETA(j_)    (hm->beta[U(j_)])
+#define SLACK(j_)   (hm->slack[U(j_)])
+#define NHBOR(j_)   (hm->nhbor[U(j_)])
+#define COUNT(i_)   (hm->count[V(i_)])
+#define EXPOSED(i_) (hm->exposed[V(i_)])
+#define LABEL(i_)   (hm->label[V(i_)])
+#define EACH_V(i_)  (i_ = 0; i_ < N; ++i_)
+#define EACH_U(j_)  (j_ = N; j_ < 2 * N; ++j_)
 
 /*
- * Our basic data structures.
+ * The basic data structures.
  */
 typedef struct stack_    stack;
 typedef struct arc_      arc;
 typedef struct arc_list_ arc_list;
 typedef struct hm_data_  hm_data;
 
-#ifndef __cplusplus
-/*
- * For convenience and clarity.
- */
-typedef enum bool_ bool;
-enum bool_ { false, true };
-#endif
-
 /*
  * The data structure corresponding to Q (see Figure 11-2).
  */
 struct stack_
 {
-  int *data;
-  int size;
+    int *data;
+    int size;
 };
 
-static void
-stack_push( stack *s, int datum )
+static void stack_push(stack *s, int datum)
 {
-  s->data[ s->size++ ] = datum;
+    s->data[s->size++] = datum;
 }
 
-static int
-stack_pop( stack *s )
+static int stack_pop(stack *s)
 {
-  return s->data[ --s->size ];
+    return s->data[--s->size];
 }
 
 /*
@@ -103,22 +97,21 @@ stack_pop( stack *s )
  */
 struct arc_
 {
-  int x;
-  int y;
+    int x;
+    int y;
 };
 
 struct arc_list_
 {
-  arc *data;
-  int size;
+    arc *data;
+    int size;
 };
 
-static void
-add_arc( arc_list *a, int x, int y )
+static void add_arc(arc_list *a, int x, int y)
 {
-  arc *pa = a->data + a->size++;
-  pa->x = x;
-  pa->y = y;
+    arc *pa = a->data + a->size++;
+    pa->x = x;
+    pa->y = y;
 }
 
 /*
@@ -127,67 +120,68 @@ add_arc( arc_list *a, int x, int y )
  */
 struct hm_data_
 {
-  /*
-   * Allocated and/or defined by the caller of hungarian_method().
-   */
-  int *mate;
-  int *c;
-  int n;
-  /*
-   * Allocated internally.
-   */
-  stack q;
-  arc_list a;
-  int *alpha;
-  int *beta;
-  int *slack;
-  int *nhbor;
-  int *count;
-  int *exposed;
-  int *label;
+    /*
+     * Allocated and/or defined by the caller of hungarian_method().
+     */
+    int *mate;
+    int *c;
+    int n;
+
+    /*
+     * Allocated internally.
+     */
+    stack q;
+    arc_list a;
+    int *alpha;
+    int *beta;
+    int *slack;
+    int *nhbor;
+    int *count;
+    int *exposed;
+    int *label;
 };
 
-static void
-hm_data_internal_free( hm_data *hm )
+static void hm_data_internal_free(hm_data *hm)
 {
-  if ( hm->q.data ) free( hm->q.data );
-  if ( hm->a.data ) free( hm->a.data );
-  if ( hm->alpha ) free( hm->alpha );
-  if ( hm->beta ) free( hm->beta );
-  if ( hm->slack ) free( hm->slack );
-  if ( hm->nhbor ) free( hm->nhbor );
-  if ( hm->count ) free( hm->count );
-  if ( hm->exposed ) free( hm->exposed );
-  if ( hm->label ) free( hm->label );
+    if (hm->q.data) free(hm->q.data);
+    if (hm->a.data) free(hm->a.data);
+    if (hm->alpha) free(hm->alpha);
+    if (hm->beta) free(hm->beta);
+    if (hm->slack) free(hm->slack);
+    if (hm->nhbor) free(hm->nhbor);
+    if (hm->count) free(hm->count);
+    if (hm->exposed) free(hm->exposed);
+    if (hm->label) free(hm->label);
 }
 
-static hm_data *
-hm_data_internal_allocate( hm_data *hm, int n )
+static hm_data *hm_data_internal_allocate(hm_data *hm, int n)
 {
-  hm->q.data = NULL;
-  hm->a.data = NULL;
-  hm->alpha = NULL;
-  hm->beta = NULL;
-  hm->slack = NULL;
-  hm->nhbor = NULL;
-  hm->count = NULL;
-  hm->exposed = NULL;
-  hm->label = NULL;
-  if ( ( hm->q.data = (int *)malloc( n * sizeof( *hm->q.data ) ) )
-       && ( hm->a.data = (arc *)malloc( n * n * sizeof( *hm->a.data ) ) )
-       && ( hm->alpha = (int *)malloc( n * sizeof( *hm->alpha ) ) )
-       && ( hm->beta = (int *)malloc( n * sizeof( *hm->beta ) ) )
-       && ( hm->slack = (int *)malloc( n * sizeof( *hm->slack ) ) )
-       && ( hm->nhbor = (int *)malloc( n * sizeof( *hm->nhbor ) ) )
-       && ( hm->count = (int *)malloc( n * sizeof( *hm->count ) ) )
-       && ( hm->exposed = (int *)malloc( n * sizeof( *hm->exposed ) ) )
-       && ( hm->label = (int *)malloc( n * sizeof( *hm->label ) ) ) )
+    hm->q.data = NULL;
+    hm->a.data = NULL;
+    hm->alpha = NULL;
+    hm->beta = NULL;
+    hm->slack = NULL;
+    hm->nhbor = NULL;
+    hm->count = NULL;
+    hm->exposed = NULL;
+    hm->label = NULL;
+
+    if ((hm->q.data = (int *)malloc(n * sizeof(*hm->q.data))) &&
+        (hm->a.data = (arc *)malloc(n * n * sizeof(*hm->a.data))) &&
+        (hm->alpha = (int *)malloc(n * sizeof(*hm->alpha))) &&
+        (hm->beta = (int *)malloc(n * sizeof(*hm->beta))) &&
+        (hm->slack = (int *)malloc(n * sizeof(*hm->slack))) &&
+        (hm->nhbor = (int *)malloc(n * sizeof(*hm->nhbor))) &&
+        (hm->count = (int *)malloc(n * sizeof(*hm->count))) &&
+        (hm->exposed = (int *)malloc(n * sizeof(*hm->exposed))) &&
+        (hm->label = (int *)malloc(n * sizeof(*hm->label))))
     {
-      hm->n = n;
-      return hm;
+        hm->n = n;
+        return hm;
     }
-  hm_data_internal_free( hm );
-  return NULL;
+
+    hm_data_internal_free(hm);
+    return NULL;
 }
 
 /*
@@ -197,52 +191,59 @@ hm_data_internal_allocate( hm_data *hm, int n )
  *
  * The formatted output coded here is intended for small numbers.
  */
-static void
-hm_print( hm_data *hm )
+static void hm_print(hm_data *hm)
 {
-  int i, j, k;
-  printf( "\n a\\b |" );
-  for EACH_U( j )
+    int i, j, k;
+    printf("\n a\\b |");
+    for EACH_U(j)
     {
-      printf( "%3d ", BETA( j ) );
+        printf("%3d ", BETA(j));
     }
-  printf( "mate exposed label\n" );
-  printf( "-----+" );
-  for EACH_U( j )
+
+    printf("mate exposed label\n");
+    printf("-----+");
+    for EACH_U(j)
     {
-      printf( "----" );
+        printf("----");
     }
-  printf( "------------------\n" );
-  for EACH_V( i )
+
+    printf("------------------\n");
+    for EACH_V(i)
     {
-      printf( "     |\n %3d |", ALPHA( i ) );
-      for EACH_U( j )
+        printf("     |\n %3d |", ALPHA(i));
+        for EACH_U(j)
         {
-          printf( "%3d ", C( i, j ) );
+            printf("%3d ", C(i, j));
         }
-      printf( "%4d %7d %5d\n", MATE( i ), EXPOSED( i ), LABEL( i ) );
+
+        printf("%4d %7d %5d\n", MATE(i), EXPOSED(i), LABEL(i));
     }
-  printf( "\nslack" );
-  for EACH_U( j )
+
+    printf("\nslack");
+    for EACH_U(j)
     {
-      printf( " %3d", SLACK( j ) == INT_MAX ? -1 : SLACK( j ) );
+        printf(" %3d", SLACK(j) == INT_MAX ? -1 : SLACK(j));
     }
-  printf( "\nnhbor" );
-  for EACH_U( j )
+
+    printf("\nnhbor");
+    for EACH_U(j)
     {
-      printf( " %3d", NHBOR( j ) );
+        printf(" %3d", NHBOR(j));
     }
-  printf( "\n\nA = { " );
-  for ( k = 0; k < A.size; ++k )
+
+    printf("\n\nA = { ");
+    for (k = 0; k < A.size; ++k)
     {
-      printf( "(%d,%d) ", A.data[ k ].x, A.data[ k ].y );
+        printf("(%d,%d) ", A.data[k].x, A.data[k].y);
     }
-  printf( "}\nQ = { " );
-  for ( k = 0; k < Q.size; ++k )
+
+    printf("}\nQ = { ");
+    for (k = 0; k < Q.size; ++k)
     {
-      printf( "%d ", Q.data[ k ] );
+        printf("%d ", Q.data[k]);
     }
-  printf( "}\n\n" );
+
+    printf("}\n\n");
 }
 
 /*
@@ -251,18 +252,18 @@ hm_print( hm_data *hm )
  * Corresponds to "procedure augment(v)",
  * but is iterative instead of recursive.
  */
-static void
-hm_augment( hm_data *hm, int v )
+static void hm_augment(hm_data *hm, int v)
 {
-  while ( LABEL( v ) != blank )
+    while (LABEL(v) != blank)
     {
-      EXPOSED( LABEL( v ) ) = MATE( v );
-      MATE( v ) = EXPOSED( v );
-      MATE( EXPOSED( v ) ) = v;
-      v = LABEL( v );
+        EXPOSED(LABEL(v)) = MATE(v);
+        MATE(v) = EXPOSED(v);
+        MATE(EXPOSED(v)) = v;
+        v = LABEL(v);
     }
-  MATE( v ) = EXPOSED( v );
-  MATE( EXPOSED( v ) ) = v;
+
+    MATE(v) = EXPOSED(v);
+    MATE(EXPOSED(v)) = v;
 }
 
 /*
@@ -270,24 +271,24 @@ hm_augment( hm_data *hm, int v )
  *
  * Corresponds to lines 7--8.
  */
-static void
-hm_initialize( hm_data *hm )
+static void hm_initialize(hm_data *hm)
 {
-  int i, j;
-  for EACH_V( i )
+    int i, j;
+    for EACH_V(i)
     {
-      MATE( i ) = blank;
-      ALPHA( i ) = 0;
+        MATE(i) = blank;
+        ALPHA(i) = 0;
     }
-  for EACH_U( j )
+
+    for EACH_U(j)
     {
-      MATE( j ) = blank;
-      BETA( j ) = INT_MAX;
-      for EACH_V( i )
+        MATE(j) = blank;
+        BETA(j) = INT_MAX;
+        for EACH_V(i)
         {
-          if ( C( i, j ) < BETA( j ) )
+            if (C(i, j) < BETA(j))
             {
-              BETA( j ) = C( i, j );
+                BETA(j) = C(i, j);
             }
         }
     }
@@ -298,51 +299,54 @@ hm_initialize( hm_data *hm )
  *
  * Corresponds to lines 12--17.
  */
-static void
-hm_construct_auxiliary_graph( hm_data *hm )
+static void hm_construct_auxiliary_graph(hm_data *hm)
 {
-  int i, j;
-  A.size = 0;
-  for EACH_V( i )
+    int i, j;
+    A.size = 0;
+    for EACH_V(i)
     {
-      EXPOSED( i ) = blank;
-      LABEL( i ) = blank;
-      /*
-       * The following data structure is not included in the Figure 11-2
-       * pseudo-code implementation. It has been added to account for
-       * "labeling" on certain vertices described within Example 11.1 that
-       * would otherwise be missing from the Figure 11-2 implementation.
-       *
-       * count[v] for any v \in V is equal to the size of the set
-       * { u \in U : nhbor[u] = v }. When this set is non-empty, v is
-       * considered to be "labeled". The use of this new data structure is
-       * only to complete the conditional check on "labeled" statuses when
-       * updating alpha within "procedure modify".
-       */
-      COUNT( i ) = 0;
+        EXPOSED(i) = blank;
+        LABEL(i) = blank;
+
+        /*
+         * The following data structure is not included in the Figure 11-2
+         * pseudo-code implementation. It has been added to account for
+         * "labeling" on certain vertices described within Example 11.1 that
+         * would otherwise be missing from the Figure 11-2 implementation.
+         *
+         * count[v] for any v \in V is equal to the size of the set
+         * { u \in U : nhbor[u] = v }. When this set is non-empty, v is
+         * considered to be "labeled". The use of this new data structure is
+         * only to complete the conditional check on "labeled" statuses when
+         * updating alpha within "procedure modify".
+         */
+        COUNT(i) = 0;
     }
-  for EACH_U( j )
+
+    for EACH_U(j)
     {
-      SLACK( j ) = INT_MAX;
-      /*
-       * The following initialization of nhbor[] is necessary for proper usage
-       * of the count[] array, whose addition and purpose is described above.
-       */
-      NHBOR( j ) = blank;
+        SLACK(j) = INT_MAX;
+
+        /*
+         * The following initialization of nhbor[] is necessary for proper usage
+         * of the count[] array, whose addition and purpose is described above.
+         */
+        NHBOR(j) = blank;
     }
-  for EACH_V( i )
+
+    for EACH_V(i)
     {
-      for EACH_U( j )
+        for EACH_U(j)
         {
-          if ( ALPHA( i ) + BETA( j ) == C( i, j ) )
+            if (ALPHA(i) + BETA(j) == C(i, j))
             {
-              if ( MATE( j ) == blank )
+                if (MATE(j) == blank)
                 {
-                  EXPOSED( i ) = j;
+                    EXPOSED(i) = j;
                 }
-              else if ( i != MATE( j ) )
+                else if (i != MATE(j))
                 {
-                  add_arc( &A, i, MATE( j ) );
+                    add_arc(&A, i, MATE(j));
                 }
             }
         }
@@ -355,28 +359,29 @@ hm_construct_auxiliary_graph( hm_data *hm )
  * Corresponds to lines 26--27, 38--39.
  * Called by hm_pre_search() and hm_search().
  */
-static void
-hm_update_slack( hm_data *hm, int z )
+static void hm_update_slack(hm_data *hm, int z)
 {
-  int k, tmp;
-  for EACH_U( k )
+    int k, tmp;
+    for EACH_U(k)
     {
-      tmp = C( z, k ) - ALPHA( z ) - BETA( k );
-      if ( 0 <= tmp && tmp < SLACK( k ) )
+        tmp = C(z, k) - ALPHA(z) - BETA(k);
+        if (0 <= tmp && tmp < SLACK(k))
         {
-          SLACK( k ) = tmp;
-          /*
-           * The following decrement and increment are necessary to maintain
-           * the count[] array, which is not included in the original Figure
-           * 11-2 implementation, and whose addition and purpose are described
-           * above in hm_construct_auxiliary_graph().
-           */
-          if ( NHBOR( k ) != blank )
+            SLACK(k) = tmp;
+
+            /*
+             * The following decrement and increment are necessary to maintain
+             * the count[] array, which is not included in the original Figure
+             * 11-2 implementation, and whose addition and purpose are described
+             * above in hm_construct_auxiliary_graph().
+             */
+            if (NHBOR(k) != blank)
             {
-              --COUNT( NHBOR( k ) );
+                --COUNT(NHBOR(k));
             }
-          ++COUNT( z );
-          NHBOR( k ) = z;
+
+            ++COUNT(z);
+            NHBOR(k) = z;
         }
     }
 }
@@ -386,26 +391,27 @@ hm_update_slack( hm_data *hm, int z )
  *
  * Corresponds to lines 19--28.
  */
-static bool
-hm_pre_search( hm_data *hm )
+static bool hm_pre_search(hm_data *hm)
 {
-  int i;
-  Q.size = 0;
-  for EACH_V( i )
+    int i;
+    Q.size = 0;
+    for EACH_V(i)
     {
-      if ( MATE( i ) == blank )
+        if (MATE(i) == blank)
         {
-          if ( EXPOSED( i ) != blank )
+            if (EXPOSED(i) != blank)
             {
-              hm_augment( hm, i );
-              return false; /* goto endstage */
+                hm_augment(hm, i);
+                return false; /* goto endstage */
             }
-          stack_push( &Q, i );
-          LABEL( i ) = blank;
-          hm_update_slack( hm, i );
+
+            stack_push(&Q, i);
+            LABEL(i) = blank;
+            hm_update_slack(hm, i);
         }
     }
-  return true;
+
+    return true;
 }
 
 /*
@@ -413,39 +419,40 @@ hm_pre_search( hm_data *hm )
  *
  * Corresponds to lines 29--41.
  */
-static bool
-hm_search( hm_data *hm )
+static bool hm_search(hm_data *hm)
 {
-  int i, j, z;
-  while ( Q.size != 0 )
+    int i, j, z;
+    while (Q.size != 0)
     {
-      i = stack_pop( &Q );
-      for ( z = 0; z < A.size; ++z )
+        i = stack_pop(&Q);
+        for (z = 0; z < A.size; ++z)
         {
-          if ( A.data[ z ].x == i )
+            if (A.data[z].x == i)
             {
-              j = A.data[ z ].y;
-              if ( LABEL( j ) == blank )
+                j = A.data[z].y;
+                if (LABEL(j) == blank)
                 {
-                  LABEL( j ) = i;
-                  if ( EXPOSED( j ) != blank )
+                    LABEL(j) = i;
+                    if (EXPOSED(j) != blank)
                     {
-                      hm_augment( hm, j );
-                      return false; /* goto endstage */
+                        hm_augment(hm, j);
+                        return false; /* goto endstage */
                     }
-                  /*
-                   * The following instruction is listed just before the prior
-                   * conditional in Figure 11-2. Here, it is relocated simply
-                   * because its execution would serve no purpose if the prior
-                   * conditional executes.
-                   */
-                  stack_push( &Q, j );
-                  hm_update_slack( hm, j );
+
+                    /*
+                     * The following instruction is listed just before the prior
+                     * conditional in Figure 11-2. Here, it is relocated simply
+                     * because its execution would serve no purpose if the prior
+                     * conditional executes.
+                     */
+                    stack_push(&Q, j);
+                    hm_update_slack(hm, j);
                 }
             }
         }
     }
-  return true;
+
+    return true;
 }
 
 /*
@@ -453,110 +460,116 @@ hm_search( hm_data *hm )
  *
  * Corresponds to "procedure modify".
  */
-static bool
-hm_modify( hm_data *hm )
+static bool hm_modify(hm_data *hm)
 {
-  int i, j, theta_one;
-  /*
-   * Determine theta_one.
-   */
-  theta_one = INT_MAX;
-  for EACH_U( j )
+    int i, j, theta_one;
+
+    /*
+     * Determine theta_one.
+     */
+    theta_one = INT_MAX;
+    for EACH_U(j)
     {
-      if ( 0 < SLACK( j ) && SLACK( j ) < theta_one )
+        if (0 < SLACK(j) && SLACK(j) < theta_one)
         {
-          theta_one = SLACK( j );
+            theta_one = SLACK(j);
         }
     }
-  theta_one /= 2;
-  /*
-   * Update the dual variable alpha.
-   */
-  for EACH_V( i )
+
+    theta_one /= 2;
+
+    /*
+     * Update the dual variable alpha.
+     */
+    for EACH_V(i)
     {
-      /*
-       * The following conditional expression has been changed from its form
-       * in Figure 11-2. Here, an additional check on the count[] array is
-       * performed to account for a certain type of "labeling" that is
-       * mentioned in the Example 11.1 walk-through but is omitted from the
-       * Figure 11-2 implementation.
-       *
-       * See the comments provided near the initialization of count[] in the
-       * function hm_construct_auxiliary_graph().
-       */
-      if ( LABEL( i ) != blank || COUNT( i ) > 0 )
+        /*
+         * The following conditional expression has been changed from its form
+         * in Figure 11-2. Here, an additional check on the count[] array is
+         * performed to account for a certain type of "labeling" that is
+         * mentioned in the Example 11.1 walk-through but is omitted from the
+         * Figure 11-2 implementation.
+         *
+         * See the comments provided near the initialization of count[] in the
+         * function hm_construct_auxiliary_graph().
+         */
+        if (LABEL(i) != blank || COUNT(i) > 0)
         {
-          ALPHA( i ) += theta_one;
+            ALPHA(i) += theta_one;
         }
-      else
+        else
         {
-          ALPHA( i ) -= theta_one;
+            ALPHA(i) -= theta_one;
         }
     }
-  /*
-   * Update the dual variable beta.
-   */
-  for EACH_U( j )
+
+    /*
+     * Update the dual variable beta.
+     */
+    for EACH_U(j)
     {
-      if ( SLACK( j ) == 0 )
+        if (SLACK(j) == 0)
         {
-          BETA( j ) -= theta_one;
+            BETA(j) -= theta_one;
         }
-      else
+        else
         {
-          BETA( j ) += theta_one;
+            BETA(j) += theta_one;
         }
     }
-  /*
-   * Update slack and check for new admissible edges.
-   */
-  for EACH_U( j )
+
+    /*
+     * Update slack and check for new admissible edges.
+     */
+    for EACH_U(j)
     {
-      if ( SLACK( j ) > 0 )
+        if (SLACK(j) > 0)
         {
-          SLACK( j ) -= 2 * theta_one;
-          if ( SLACK( j ) == 0 )
+            SLACK(j) -= 2 * theta_one;
+            if (SLACK(j) == 0)
             {
-              if ( MATE( j ) == blank )
+                if (MATE(j) == blank)
                 {
-                  EXPOSED( NHBOR( j ) ) = j;
-                  hm_augment( hm, NHBOR( j ) );
-                  return false; /* goto endstage */
+                    EXPOSED(NHBOR(j)) = j;
+                    hm_augment(hm, NHBOR(j));
+                    return false; /* goto endstage */
                 }
-              else
+                else
                 {
-                  /*
-                   * The following statement corresponds to a pseudo-code
-                   * command that should be removed from the else-clause of
-                   * the modify procedure in Figure 11-2.
-                   *
-                   * LABEL( MATE( j ) ) = NHBOR( j );
-                   *
-                   * The inclusion of the above statement causes the arc
-                   * added in one of the next statements to never be considered
-                   * in following "search" sub-stages during this stage, and it
-                   * partially duplicates what would happen in these sub-stages
-                   * if the arc were to be considered there. The result of
-                   * inclusion is (often) non-optimality of the algorithm's
-                   * output.
-                   */
-                  /*
-                   * The next statement corresponds to a pseudo-code command
-                   * (in the same else-clause) that should be modified
-                   * slightly. In Figure 11-2, this command "pushes" mate[ u ]
-                   * into Q when it should be "pushing" nhbor[ u ] instead.
-                   * This is because the purpose of this command is to ensure
-                   * that the soon-to-be-added arc will be considered in the
-                   * next "search" sub-stage, and consideration is dependent
-                   * upon the arc-tail, not the arc-head.
-                   */
-                  stack_push( &Q, NHBOR( j ) ); /* Note modification */
-                  add_arc( &A, NHBOR( j ), MATE( j ) );
+                    /*
+                     * The following statement corresponds to a pseudo-code
+                     * command that should be removed from the else-clause of
+                     * the modify procedure in Figure 11-2.
+                     *
+                     * LABEL( MATE( j ) ) = NHBOR( j );
+                     *
+                     * The inclusion of the above statement causes the arc
+                     * added in one of the next statements to never be considered
+                     * in following "search" sub-stages during this stage, and it
+                     * partially duplicates what would happen in these sub-stages
+                     * if the arc were to be considered there. The result of
+                     * inclusion is (often) non-optimality of the algorithm's
+                     * output.
+                     */
+
+                     /*
+                      * The next statement corresponds to a pseudo-code command
+                      * (in the same else-clause) that should be modified
+                      * slightly. In Figure 11-2, this command "pushes" mate[ u ]
+                      * into Q when it should be "pushing" nhbor[ u ] instead.
+                      * This is because the purpose of this command is to ensure
+                      * that the soon-to-be-added arc will be considered in the
+                      * next "search" sub-stage, and consideration is dependent
+                      * upon the arc-tail, not the arc-head.
+                      */
+                    stack_push(&Q, NHBOR(j)); /* Note modification */
+                    add_arc(&A, NHBOR(j), MATE(j));
                 }
             }
         }
     }
-  return true;
+
+    return true;
 }
 
 /*
@@ -581,43 +594,59 @@ hm_modify( hm_data *hm )
  * matching, where V={0,...,n-1} and U={n,...,2n-1}. An edge (v,u) is part of
  * the matching if and only if (v,mate[v])=(mate[u],u).
  */
-int *
-hungarian_method( int *mate, int *c, int n )
+int *hungarian_method(int *mate, int *c, int n)
 {
-  /*
-   * Initialize the algorithm's internal data structures.
-   */
-  hm_data hm;
-  if ( !hm_data_internal_allocate( &hm, n ) )
-    return NULL;
-  hm.mate = mate;
-  hm.c = c;
-  /*
-   * Double each cost to ensure integrality of the alphabeta algorithm.
-   */
-  int i, j;
-  for ( i = 0; i < n; ++i )
-    for ( j = 0; j < n; ++j )
-      c[ i * n + j ] *= 2;
-  /*
-   * Run the Hungarian method as described in Section 11.2 and Figure 11-2.
-   */
-  int s;
-  hm_initialize( &hm );
-  hm.q.size = 0;
-  hm.a.size = 0;
-  for ( s = 1; s <= n; ++s )
+    /*
+     * Initialize the algorithm's internal data structures.
+     */
+    hm_data hm;
+    if (!hm_data_internal_allocate(&hm, n))
     {
-      hm_construct_auxiliary_graph( &hm );
-      if ( hm_pre_search( &hm ) )
-        while( hm_search( &hm ) && hm_modify( &hm ) );
+        return NULL;
     }
-  /*
-   * Reset (halve) each cost and clean up.
-   */
-  for ( i = 0; i < n; ++i )
-    for ( j = 0; j < n; ++j )
-      c[ i * n + j ] /= 2;
-  hm_data_internal_free( &hm );
-  return mate;
+
+    hm.mate = mate;
+    hm.c = c;
+
+    /*
+     * Double each cost to ensure integrality of the alphabeta algorithm.
+     */
+    int i, j;
+    for (i = 0; i < n; ++i)
+    {
+        for (j = 0; j < n; ++j)
+        {
+            c[i * n + j] *= 2;
+        }
+    }
+
+    /*
+     * Run the Hungarian method as described in Section 11.2 and Figure 11-2.
+     */
+    int s;
+    hm_initialize(&hm);
+    hm.q.size = 0;
+    hm.a.size = 0;
+    for (s = 1; s <= n; ++s)
+    {
+        hm_construct_auxiliary_graph(&hm);
+        if (hm_pre_search(&hm))
+        {
+            while (hm_search(&hm) && hm_modify(&hm));
+        }
+    }
+
+    /*
+     * Reset (halve) each cost and clean up.
+     */
+    for (i = 0; i < n; ++i)
+    {
+        for (j = 0; j < n; ++j)
+        {
+            c[i * n + j] /= 2;
+        }
+    }
+
+    hm_data_internal_free(&hm);
+    return mate;
 }

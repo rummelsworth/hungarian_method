@@ -18,6 +18,6 @@
 #ifndef BRUTE_FORCE_ASSIGNMENT_H
 #define BRUTE_FORCE_ASSIGNMENT_H
 
-int *brute_force_assignment( int *, int *, int );
+int *brute_force_assignment(int *, int *, int);
 
 #endif

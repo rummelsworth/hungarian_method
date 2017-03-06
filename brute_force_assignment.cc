@@ -20,21 +20,23 @@
 #include <cstring>
 #include <limits.h>
 
-/*
- * rho[] is an array used by the function perm_lex_successor() found below.
- * It is declared and maintained globally in order to be efficiently re-used
- * by numerous successive calls to that function.
- */
+ /*
+  * rho[] is an array used by the function perm_lex_successor() found below.
+  * It is declared and maintained globally in order to be efficiently re-used
+  * by numerous successive calls to that function.
+  */
 static int *rho;
 
 /*
  * This function is registered with atexit() in order to free any memory
  * allocated for rho[] at program's end.
  */
-static void
-rho_free( void )
+static void rho_free(void)
 {
-  if ( rho ) free( rho );
+    if (rho)
+    {
+        free(rho);
+    }
 }
 
 /*
@@ -47,54 +49,63 @@ rho_free( void )
  * Generates the lexicographic successor of the given permutation.
  * Some lines are adjusted for zero-based indexing. Such lines are indicated.
  */
-static int *
-perm_lex_successor( int n, int *pi )
+static int *perm_lex_successor(int n, int *pi)
 {
-  static int m;
-  int h, i, j, t, *p;
-  i = n - 2; /* adjusted */
-  while ( i >= 0 && pi[ i ] > pi[ i + 1 ] ) /* adjusted */
+    static int m;
+    int h, i, j, t, *p;
+    i = n - 2; /* adjusted */
+    while (i >= 0 && pi[i] > pi[i + 1]) /* adjusted */
     {
-      --i;
+        --i;
     }
-  if ( i < 0 ) /* adjusted */
-    return NULL;
-  /*
-   * BEGIN: memory management for rho[] (see declaration above)
-   */
-  if ( m < n )
+
+    if (i < 0) /* adjusted */
     {
-      if ( m == 0 )
+        return NULL;
+    }
+
+    /*
+     * BEGIN: memory management for rho[] (see declaration above)
+     */
+    if (m < n)
+    {
+        if (m == 0)
         {
-          atexit( rho_free );
+            atexit(rho_free);
         }
-      p = (int *)realloc( rho, ( m = n ) * sizeof( *p ) );
-      if ( !p )
+
+        p = (int *)realloc(rho, (m = n) * sizeof(*p));
+        if (!p)
         {
-          return NULL;
+            return NULL;
         }
-      rho = p;
+
+        rho = p;
     }
-  /*
-   * END: memory management for rho[]
-   */
-  j = n - 1; /* adjusted */
-  while ( pi[ j ] < pi[ i ] )
+    /*
+     * END: memory management for rho[]
+     */
+
+    j = n - 1; /* adjusted */
+    while (pi[j] < pi[i])
     {
-      --j;
+        --j;
     }
-  t = pi[ j ];
-  pi[ j ] = pi[ i ];
-  pi[ i ] = t;
-  for ( h = i + 1; h < n; ++h ) /* adjusted */
+
+    t = pi[j];
+    pi[j] = pi[i];
+    pi[i] = t;
+    for (h = i + 1; h < n; ++h) /* adjusted */
     {
-      rho[ h ] = pi[ h ];
+        rho[h] = pi[h];
     }
-  for ( h = i + 1; h < n; ++h ) /* adjusted */
+
+    for (h = i + 1; h < n; ++h) /* adjusted */
     {
-      pi[ h ] = rho[ n + i - h ]; /* adjusted */
+        pi[h] = rho[n + i - h]; /* adjusted */
     }
-  return pi;
+
+    return pi;
 }
 
 /*
@@ -126,49 +137,57 @@ perm_lex_successor( int n, int *pi )
  * matching, where V={0,...,n-1} and U={n,...,2n-1}. An edge (v,u) is part of
  * the matching if and only if (v,mate[v])=(mate[u],u).
  */
-int *
-brute_force_assignment( int *mate, int *c, int n )
+int *brute_force_assignment(int *mate, int *c, int n)
 {
-  /*
-   * Allocate temporary storage for exhaustive search.
-   */
-  int best_cost, current_cost;
-  int *best_perm, *current_perm;
-  if ( !( best_perm = (int *)malloc( n * sizeof( *best_perm ) ) )
-       || !( current_perm = (int *)malloc( n * sizeof( *current_perm ) ) ) )
-    return NULL;
-  /*
-   * Initialize the current permutation data structure with the
-   * lexicographically first permutation [0,...,n-1].
-   */
-  int i;
-  for ( i = 0; i < n; ++i )
-    current_perm[ i ] = i;
-  /*
-   * Search over all n! permutations.
-   */
-  best_cost = INT_MAX;
-  do
+    /*
+     * Allocate temporary storage for exhaustive search.
+     */
+    int best_cost, current_cost;
+    int *best_perm, *current_perm;
+    if (!(best_perm = (int *)malloc(n * sizeof(*best_perm))) ||
+        !(current_perm = (int *)malloc(n * sizeof(*current_perm))))
     {
-      current_cost = 0;
-      for ( i = 0; i < n; ++i )
-        current_cost += c[ i * n + current_perm[ i ] ];
-      if ( current_cost < best_cost )
+        return NULL;
+    }
+
+    /*
+     * Initialize the current permutation data structure with the
+     * lexicographically first permutation [0,...,n-1].
+     */
+    int i;
+    for (i = 0; i < n; ++i)
+    {
+        current_perm[i] = i;
+    }
+
+    /*
+     * Search over all n! permutations.
+     */
+    best_cost = INT_MAX;
+    do
+    {
+        current_cost = 0;
+        for (i = 0; i < n; ++i)
         {
-          best_cost = current_cost;
-          memcpy( best_perm, current_perm, n * sizeof( *current_perm ) );
+            current_cost += c[i * n + current_perm[i]];
         }
-    }
-  while ( perm_lex_successor( n, current_perm ) );
-  /*
-   * Translate the best permutation into mate[].
-   */
-  int v, u;
-  for ( v = 0; v < n; ++v )
+        if (current_cost < best_cost)
+        {
+            best_cost = current_cost;
+            memcpy(best_perm, current_perm, n * sizeof(*current_perm));
+        }
+    } while (perm_lex_successor(n, current_perm));
+
+    /*
+     * Translate the best permutation into mate[].
+     */
+    int v, u;
+    for (v = 0; v < n; ++v)
     {
-      u = n + best_perm[ v ];
-      mate[ v ] = u;
-      mate[ u ] = v;
+        u = n + best_perm[v];
+        mate[v] = u;
+        mate[u] = v;
     }
-  return mate;
+
+    return mate;
 }
