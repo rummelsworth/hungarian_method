@@ -1,3 +1,5 @@
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # The Hungarian method: an implementation in C/C++
 
 - 5 March 2017
